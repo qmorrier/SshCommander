@@ -19,10 +19,9 @@ public class SSHConnection {
     private static final int WAITING_TIME_MS             = 500;
     private static final int TIMEOUT_CONNECTION_MS       = 4000;
     private static final int CHANNEL_CONNECT_TIMEOUT_MS  = 10000;
+    private static final String SSH_COMMAND_ERROR_TEXT = "Error while waiting for ssh response =";
     
-    private String buffString = "";
     private Session session;
-    private ChannelExec channel;
 	
 	
  
@@ -91,6 +90,9 @@ public class SSHConnection {
      *------------------------------------------------------------------------------
      */
     public String sendExecCommand( String command ) {
+        StringBuilder buffString = new StringBuilder();
+        ChannelExec channel;
+        
         try {
             channel = (ChannelExec)session.openChannel("exec");
             
@@ -104,23 +106,13 @@ public class SSHConnection {
             channel.connect(CHANNEL_CONNECT_TIMEOUT_MS);
             System.out.println("System connected...");
   
-            buffString = "";
-  
             // read buffer
             byte[] tmp = new byte[ SIZE_BYTE_CHAR_BUFF ];
-            
+
             int i = 0;
             while(true){
                 //  If there is something in the Stream "in", we wait and then we read.
-                // if ( in.available() > 0 ) {
-                    try {
-                        Thread.sleep( WAITING_TIME_MS );
-                    } catch(Exception ee){
-                        System.out.println("Error while waiting for ssh response ="+ee.toString());
-                        Thread.currentThread().interrupt();
-                        break;
-                    }
-                // }//if
+                // Thread.sleep( WAITING_TIME_MS );
 
                 while( in.available() > 0 ) {
                     i = in.read(
@@ -137,30 +129,30 @@ public class SSHConnection {
                 // Convert the read buffer to string.
                 String buffStringTmp = new String(tmp, 0, i);
                 //System.out.print( buffStringTmp );
-                buffString += buffStringTmp;
+                buffString.append(buffStringTmp);
 
                 if(channel.isClosed()) {
                     System.out.println( "exit-status: " + channel.getExitStatus() );
                     break;
                 }
 
-                try {
-                    Thread.sleep( WAITING_TIME_MS );
-                } catch(Exception e){
-                    System.out.println("Error while waiting for ssh response ="+e.toString());
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }//while(true)
+                Thread.sleep( WAITING_TIME_MS );
+
+            }// while(true)
   
             channel.disconnect();
         } catch (JSchException e) {
         	System.out.println("Error while sending ssh Command"+e.toString());
+            
         } catch(IOException e) {
             System.out.println("Error while sending ssh Command"+e.toString());
+            
+        } catch(InterruptedException e) {
+            System.out.println(SSH_COMMAND_ERROR_TEXT + e.toString());
+            Thread.currentThread().interrupt();
         }
 
-        return buffString;
+        return buffString.toString();
     }// sendExecCommand()
     
     
@@ -186,13 +178,7 @@ public class SSHConnection {
                     System.out.println( "exit-status: " + channel.getExitStatus() );
                     break;
                 }
-                try {
-                    Thread.sleep( WAITING_TIME_MS );
-                } catch(Exception e){
-                    System.out.println("Error while waiting for ssh response ="+e.toString());
-                    Thread.currentThread().interrupt();
-                    break;
-                }
+                Thread.sleep( WAITING_TIME_MS );
             }
             
             output = os.toString("UTF8");
@@ -200,9 +186,12 @@ public class SSHConnection {
             channel.disconnect();
             
         } catch (JSchException e) {
-        	System.out.println("Error while sending ssh Command " + e.toString());
+        	System.out.println(SSH_COMMAND_ERROR_TEXT + e.toString());
         } catch(IOException e) {
-            System.out.println("Error while sending ssh Command " + e.toString());
+            System.out.println(SSH_COMMAND_ERROR_TEXT + e.toString());
+        } catch(InterruptedException e) {
+            System.out.println(SSH_COMMAND_ERROR_TEXT + e.toString());
+            Thread.currentThread().interrupt();
         }
   
         return output;

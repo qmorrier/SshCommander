@@ -4,7 +4,7 @@
 
     <groupId>ch.qumo</groupId>
     <artifactId>SshCommander</artifactId>
-    <version>3.3</version>
+    <version>3.4</version>
     <packaging>jar</packaging>
 
     <name>SshCommander</name>
@@ -48,5 +48,23 @@
             </plugin>
         </plugins>
     </build>
-  
 </project>
+<settings>
+    <pluginGroups>
+        <pluginGroup>org.sonarsource.scanner.maven</pluginGroup>
+    </pluginGroups>
+    <profiles>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- Optional URL to server. Default value is http://localhost:9000 
+                <sonar.host.url>
+                  http://myserver:9000
+                </sonar.host.url>-->
+            </properties>
+        </profile>
+    </profiles>
+</settings>

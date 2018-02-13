@@ -3,8 +3,6 @@ package ch.qumo.sshcommander;
 
 
 import ch.qumo.sshcommander.display.SshCommanderMainFrame;
-import java.awt.Color;
-import javax.swing.UIManager;
 
 
 

@@ -45,14 +45,14 @@ public class SshCommanderMainFrame extends JFrame {
 
 
     private static final long serialVersionUID = 1L;
-    private static final String formatStr = "yyyy/MM/dd-HH:mm:ss.SSS";
-    private static final String dateFormatStrForFilesCreation = "yyyy-MM-dd_HH-mm-ss-SSS";
-    private static final String fileExtension = ".log";
+    private static final String RESPONSE_DATE_FORMAT_STR = "yyyy/MM/dd-HH:mm:ss.SSS";
+    private static final String FILE_CREATION_DATE_FORMAT_STR = "yyyy-MM-dd_HH-mm-ss-SSS";
+    private static final String FILE_EXTENSION = ".log";
     private int screenHeight;
     private int screenWidth;
     private boolean isExecMode = true;
     private boolean isShellMode = false;
-    private Thread t;
+    private transient Thread t;
     private boolean isInterrupt = false;
     
     private JTextArea commandTextArea;
@@ -81,20 +81,6 @@ public class SshCommanderMainFrame extends JFrame {
 
 
     public SshCommanderMainFrame() {
-        /* // Less readable on Win7
-         try {
-         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-         } catch(ClassNotFoundException e) {
-         e.printStackTrace();
-         } catch(InstantiationException e) {
-         e.printStackTrace();
-         } catch(IllegalAccessException e) {
-         e.printStackTrace();
-         } catch(UnsupportedLookAndFeelException e) {
-         e.printStackTrace();
-         }
-        */
-        
         // Bug fix for:
         //        com.jcraft.jsch.JSchException: Algorithm negotiation fail
         //          at com.jcraft.jsch.Session.receive_kexinit(Session.java:582)
@@ -181,105 +167,7 @@ public class SshCommanderMainFrame extends JFrame {
         submitCommandButton = new JButton("Submit");
         submitCommandButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-
-                t = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        StringBuilder fullResponse = new StringBuilder(responseTextArea.getText());
-
-                        String command = commandTextArea.getText();
-                        String[] urls = ipAdressTextField.getText().split(",");
-
-                        SimpleDateFormat dateFormat = new SimpleDateFormat(formatStr);
-                        
-                        String destFolderName = "";
-                        
-                        SimpleDateFormat dateFormatForFiles = new SimpleDateFormat(dateFormatStrForFilesCreation);
-                        if(exportAsFilesCheckBox.isSelected()) {
-                            destFolderName = dateFormatForFiles.format(new Date());
-                            new File(destFolderName).mkdir();
-                        }
-
-                        for(String url : urls) {
-                            String urlTrimed = url.trim();
-                            String host = url.substring(url.lastIndexOf('@')+1);
-                            String formatedSourceDate = dateFormat.format(new Date());
-                            fullResponse.append("*******************************************************************************\n")
-                                    .append("Response for url:").append(urlTrimed).append("\n")
-                                    .append("*******************************************************************************\n")
-                                    .append(formatedSourceDate)
-                                    .append(" - Start connection...\n");
-                            responseTextArea.setText(fullResponse.toString());
-
-                            try {
-                                SSHConnection connection = new SSHConnection();
-                                connection.connect(urlTrimed);
-                                
-                                String response = "";
-                                
-                                if (isExecMode) {
-                                    response = connection.sendExecCommand(command);
-                                    
-                                } else if(isShellMode) {
-                                    String[] commands = command.split("\n");
-                                    response = connection.sendShellCommand(commands);
-                                }
-                                connection.disconnect();
-                                
-                                formatedSourceDate = dateFormat.format(new Date());
-                                fullResponse.append(formatedSourceDate)
-                                        .append(" - Done! Response:\n")
-                                        .append("\n-------------------------\n")
-                                        .append(response)
-                                        .append("\n-------------------------\n\n\n");
-                                if(exportAsFilesCheckBox.isSelected()) {
-                                    try {
-                                        writeInAFile(destFolderName  +File.separator + host + fileExtension, response);
-                                    } catch(IOException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-
-                            } catch(JSchException e) {
-                                String errorStr = stackTraceToString(e);
-                                fullResponse.append("\n-------------------------\n")
-                                            .append(errorStr)
-                                            .append("\n-------------------------\n\n\n");
-                                if(exportAsFilesCheckBox.isSelected()) {
-                                    try {
-                                        writeInAFile(destFolderName  +File.separator + host + fileExtension, errorStr);
-                                    } catch(IOException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-
-                            } finally {
-                                if(isInterrupt) {
-                                    fullResponse.append("\n==> PROCESS TERMINATED BY USER !!\n");
-                                }
-                                String fullResponseStr = fullResponse.toString();
-                                responseTextArea.setText(fullResponseStr);
-                                if(exportAsFilesCheckBox.isSelected()) {
-                                    try {
-                                        writeInAFile(destFolderName  +File.separator + "root" + fileExtension, fullResponseStr);
-                                    } catch(IOException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-                                
-                                if(isInterrupt) {
-                                    isInterrupt = false;
-                                    System.out.println("Process exited by user");
-                                    break;
-                                }
-                            }
-                        }
-                        notifyThreadDone();
-                    }
-                });
-                notifyThreadStarts();
-                t.start();
+                sendCommandsInBackgroundThread();
             }
         });
 
@@ -504,6 +392,101 @@ public class SshCommanderMainFrame extends JFrame {
                   nonEditableFontColor,
                   caretColor);
     }
+    
+    
+    
+    private void sendCommandsInBackgroundThread() {
+        t = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                StringBuilder fullResponse = new StringBuilder(responseTextArea.getText());
+
+                String command = commandTextArea.getText();
+                String[] urls = ipAdressTextField.getText().split(",");
+
+                SimpleDateFormat responseDateFormat = new SimpleDateFormat(RESPONSE_DATE_FORMAT_STR);
+
+                String destFolderName = "";
+
+                SimpleDateFormat dateFormatForFiles = new SimpleDateFormat(FILE_CREATION_DATE_FORMAT_STR);
+                if(exportAsFilesCheckBox.isSelected()) {
+                    destFolderName = dateFormatForFiles.format(new Date());
+                    new File(destFolderName).mkdir();
+                }
+
+                try {
+                    for(String url : urls) {
+                        String urlTrimed = url.trim();
+                        String host = url.substring(url.lastIndexOf('@')+1);
+                        String formatedSourceDate = responseDateFormat.format(new Date());
+                        fullResponse.append("*******************************************************************************\n")
+                                .append("Response for url:").append(urlTrimed).append("\n")
+                                .append("*******************************************************************************\n")
+                                .append(formatedSourceDate)
+                                .append(" - Start connection...\n");
+                        responseTextArea.setText(fullResponse.toString());
+
+                        try {
+                            SSHConnection connection = new SSHConnection();
+                            connection.connect(urlTrimed);
+
+                            String response = "";
+
+                            if (isExecMode) {
+                                response = connection.sendExecCommand(command);
+
+                            } else if(isShellMode) {
+                                String[] commands = command.split("\n");
+                                response = connection.sendShellCommand(commands);
+                            }
+                            connection.disconnect();
+
+                            formatedSourceDate = responseDateFormat.format(new Date());
+                            fullResponse.append(formatedSourceDate)
+                                    .append(" - Done! Response:\n")
+                                    .append("\n-------------------------\n")
+                                    .append(response)
+                                    .append("\n-------------------------\n\n\n");
+                            if(exportAsFilesCheckBox.isSelected()) {
+                                writeInAFile(destFolderName  +File.separator + host + FILE_EXTENSION, response);
+                            }
+
+                        } catch(JSchException e) {
+                            String errorStr = stackTraceToString(e);
+                            fullResponse.append("\n-------------------------\n")
+                                        .append(errorStr)
+                                        .append("\n-------------------------\n\n\n");
+                            if(exportAsFilesCheckBox.isSelected()) {
+                                writeInAFile(destFolderName  +File.separator + host + FILE_EXTENSION, errorStr);
+                            }
+                        }
+                        
+                        if(isInterrupt) {
+                            String terminatedByUserMessage = "\n==> PROCESS TERMINATED BY USER !!\n";
+                            fullResponse.append(terminatedByUserMessage);
+                            System.out.println(terminatedByUserMessage);
+                            isInterrupt = false;
+                            break;
+                        } else {
+                            String fullResponseStr = fullResponse.toString();
+                            responseTextArea.setText(fullResponseStr);
+                        }
+                        
+                    }// for(String url : urls)
+                }  finally {
+                    String fullResponseStr = fullResponse.toString();
+                    responseTextArea.setText(fullResponseStr);
+                    if(exportAsFilesCheckBox.isSelected()) {
+                        writeInAFile(destFolderName  +File.separator + "root" + FILE_EXTENSION, fullResponseStr);
+                    }
+                }
+                notifyThreadDone();
+            }
+        });
+        notifyThreadStarts();
+        t.start();
+    }
 
 
 
@@ -516,15 +499,36 @@ public class SshCommanderMainFrame extends JFrame {
     
     
     
-    public static void writeInAFile(String filePath, String text) throws IOException {
-        FileWriter fw = new FileWriter(filePath);
-        BufferedWriter output = new BufferedWriter(fw);
+    public static void writeInAFile(String filePath, String text) {
+        FileWriter fw = null;
+        BufferedWriter output = null;
+        try {
+            fw = new FileWriter(filePath);
+            output = new BufferedWriter(fw);
 
-        output.write(text);// Write in BufferedWriter as buffer
+            output.write(text);// Write in BufferedWriter as buffer
 
-        output.flush();// Flush the file for the BufferedWriter
-
-        output.close();
+            output.flush();// Flush the file for the BufferedWriter
+            
+        } catch(IOException ex) {
+            ex.printStackTrace();
+            
+        } finally {
+            if(fw != null) {
+                try {
+                    fw.close(); 
+                } catch(IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if(output != null) {
+                try {
+                    output.close(); 
+                } catch(IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
 }
