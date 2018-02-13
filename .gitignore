@@ -1,0 +1,8 @@
+/target/surefire
+/target/test-classes
+/target/archive-tmp
+/target/classes
+/target/maven-archiver
+/.settings
+/.classpath
+/.project

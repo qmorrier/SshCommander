@@ -1,0 +1,73 @@
+0.0.1.SNAPSHOT => Première release
+
+0.2 => - Passage de l'exécution des commandes dans un thread en backend (et non plus sur l'event ce qui freeze l'IHM...)
+       - Ajout en live des infos de connexion / reéponse (on n'attend plus la fin de toutes les commandes)
+       - Si une exception est levée, elle ne concerne que la connection en cour et sera reportée par connection.
+         Le reste des connexions continuent de s'exécuter normalement.
+       - Ajout de la date aux logs de connexions
+
+2016.06.17:
+0.2.1 => -Passage version JSch 1.5.0 vers 1.5.3  (Dépendance dans le pom)  
+      => voir JSch change log ici:  http://www.jcraft.com/jsch/ChangeLog
+
+2016.07.15
+2.2 => Bug bix for:
+        // com.jcraft.jsch.JSchException: Algorithm negotiation fail
+        //   at com.jcraft.jsch.Session.receive_kexinit(Session.java:582)
+        //   at com.jcraft.jsch.Session.connect(Session.java:320)
+        //   at ch.qumo.sshcommander.ssh.SSHConnection.connect(SSHConnection.java:62)
+        //   at ch.qumo.sshcommander.display.SshCommanderMainFrame$1$1.run(SshCommanderMainFrame.java:118)
+        //   at java.lang.Thread.run(Unknown Source)
+        //
+        // This is linked to available cyphers on both sides:
+        // Server and client cannot agree on a common key exchange algorithm
+
+
+2018.02.08
+3.0 => - Passage version JSch 1.5.3 vers 1.5.4  (Dépendance dans le pom)
+       - Ajout du choix "Exec Mode" ou "Shell mode" (shell mode ajouté pour le support de certains 'embedded' serveurs,
+         comme un switch HP par exemple)
+       - Ajout de l'export dans des fichiers : 
+               - création d'un dossier avec pour nom la date du submit
+               - création d'un fichier root.log avec toutes les réponses dedans
+               - création d'un fichier par device, avec pour nom l'url
+       - Modification des tempos et tailles de Buffer ("Exec Mode")
+       - Correction lecture buffer "Exec Mode", qui était limité à la dernière partie (au dernier read)
+       - Ajout du trim des urls splitées
+
+
+2018.02.08
+3.2 => - Ajout d'un bouton de cancel de l'execution encours (surtout utilse si on oublie la commande exit ou quit à la fin 
+         en "Shell mode")
+       - Dark mode
+       - Ajout Scrollpane dans le champs ip adresses
+       - Ajout de la modification de la font sur tous les textes
+       - Ajout du resize auto du champs adresse en cas de changement de font
+
+2018.02.08
+3.3 => - Modif caret color en blanc (invisible sinon en mode dark)
+       - Augmentation de la luminosité du texte éditable (+20 à toutes les couleurs)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
