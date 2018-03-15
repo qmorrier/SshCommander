@@ -49,8 +49,16 @@
        - Augmentation de la luminosité du texte éditable (+20 à toutes les couleurs)
 
 
+2018.02.13
+3.4 => - Add to ignorelist Target
+       - Delete unused class Parser.java
+       - Remove unused imports in main
+       - Refactor break in finally (SONAR tip)
+       - Uppercase constants (SONAR tip)
+       - Add finally to write in a file to close buffers (SONAR tip)
 
-
+2015.03.15
+v3.5 => - Ajout du protocol Telnet, et du choix de protocol
 
 
 
