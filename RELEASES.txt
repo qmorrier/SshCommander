@@ -61,7 +61,8 @@
 v3.5 => - Ajout du protocol Telnet, et du choix de protocol
 
 
-
+2015.03.15 15h03
+v3.6 => - Ajout changement de couleur par CTRL + B sur les zones d'édition de texte
 
 
 

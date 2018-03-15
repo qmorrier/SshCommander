@@ -28,15 +28,21 @@ import ch.qumo.sshcommander.ssh.SSHConnection;
 import ch.qumo.sshcommander.telnet.TelnetConnection;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Event;
+import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ButtonGroup;
+import javax.swing.InputMap;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
+import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 
@@ -88,7 +94,15 @@ public class SshCommanderMainFrame extends JFrame {
     private TitledBorder commandTitledBorder;
     private TitledBorder responseTitledBorder ;
     private TitledBorder ipAdressTitledBorder;
-
+    
+    // Backup colors
+    Color editableColor;
+    Color editableFontColor;
+    Color nonEditableFontColor;
+    Color caretColor;
+    
+    
+    
 
     public SshCommanderMainFrame() {
         // Bug fix for:
@@ -224,7 +238,6 @@ public class SshCommanderMainFrame extends JFrame {
         mainPanelHeader.add(protocolsPanel, BorderLayout.SOUTH);
         
         
-        
         centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
         
@@ -264,10 +277,10 @@ public class SshCommanderMainFrame extends JFrame {
         mainPanel.add(mainPanelHeader, BorderLayout.NORTH);
         this.setContentPane(mainPanel);
 
-        // on ajoute un listener de molette de souris pour resizer la font
+        // Add mouse wheel listener to resize the font
         this.addMouseWheelListener(new MouseWheelListener() {
             public void mouseWheelMoved(MouseWheelEvent e) {
-                // handle some events here and dispatch others
+                // Handle some events here and dispatch others
                 if(shouldHandleHere(e)) {
                     // Si CTRL down, on resize la police
                     Font newFont = null;
@@ -307,28 +320,42 @@ public class SshCommanderMainFrame extends JFrame {
                     }
                 }
             }
-
-
-
+            
             public boolean shouldHandleHere(MouseWheelEvent e) {
                 return (e.getModifiersEx() & MouseWheelEvent.CTRL_DOWN_MASK) != 0;
             }
         });
         
+        /////// Add CTRL + B listener to change colors ///////
+        Action doChangeColors = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                if(mainPanel.getBackground().equals(editableColor)) {
+                    setDarkColors();
+                } else {
+                    setOriginalsColors();
+                }
+            }
+        };
+        KeyStroke ctrlB = KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.CTRL_DOWN_MASK);
+        ipAdressTextField.getInputMap().put(ctrlB, doChangeColors);
+        commandTextArea.getInputMap().put(ctrlB, doChangeColors);
+        responseTextArea.getInputMap().put(ctrlB, doChangeColors);
+        
         
         
         ///////  Dark mode ///////
+        backupOriginalColors();
         setDarkColors();
         
         /////// Set Bold Font ///////
+        ipAdressTextField.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
+        commandTextArea.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
+        responseTextArea.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         sshRadioButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         telnetRadioButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         execModeRadioButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         shellModeRadioButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         exportAsFilesCheckBox.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
-        commandTextArea.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
-        responseTextArea.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
-        ipAdressTextField.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         submitCommandButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         exitCommandButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         
@@ -442,16 +469,34 @@ public class SshCommanderMainFrame extends JFrame {
             }
         });
     }
-        
+    
+    
+    
+    private void backupOriginalColors() {
+        editableColor = mainPanel.getBackground();
+        editableFontColor = exportAsFilesCheckBox.getForeground();
+        nonEditableFontColor = ipAdressTitledBorder.getTitleColor();
+        caretColor = ipAdressTextField.getCaretColor();
+    }
+    
+    
+    
+    private void setOriginalsColors() {
+        setColors(editableColor,
+                  editableFontColor,
+                  nonEditableFontColor,
+                  caretColor);
+    }
+    
     
     
     private void setDarkColors() {
-        Color editableDarkColor = new Color(43, 43, 43);
+        Color editableColor = new Color(43, 43, 43);
         Color editableFontColor = new Color(189, 203, 218);
         Color nonEditableFontColor = new Color(104, 151, 187);
         Color caretColor = new Color(255, 255, 255);
         
-        setColors(editableDarkColor,
+        setColors(editableColor,
                   editableFontColor,
                   nonEditableFontColor,
                   caretColor);
