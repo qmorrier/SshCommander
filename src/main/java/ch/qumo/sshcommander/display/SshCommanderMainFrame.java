@@ -25,6 +25,7 @@ import javax.swing.border.TitledBorder;
 import com.jcraft.jsch.JSchException;
 
 import ch.qumo.sshcommander.ssh.SSHConnection;
+import ch.qumo.sshcommander.telnet.TelnetConnection;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.io.BufferedWriter;
@@ -48,8 +49,12 @@ public class SshCommanderMainFrame extends JFrame {
     private static final String RESPONSE_DATE_FORMAT_STR = "yyyy/MM/dd-HH:mm:ss.SSS";
     private static final String FILE_CREATION_DATE_FORMAT_STR = "yyyy-MM-dd_HH-mm-ss-SSS";
     private static final String FILE_EXTENSION = ".log";
+    private static final String SSH_DEFAULT_COMMAND_TEXT = "PATH=/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/administrator/bin\n\nhostname && hostname -I\n";
+    private static final String TELNET_DEFAULT_COMMAND_TEXT = "";
     private int screenHeight;
     private int screenWidth;
+    private boolean isSshProtocol = true;
+    private boolean isTelnetProtocol = false;
     private boolean isExecMode = true;
     private boolean isShellMode = false;
     private transient Thread t;
@@ -64,6 +69,10 @@ public class SshCommanderMainFrame extends JFrame {
     
     // For styling only
     private JPanel mainPanel;
+    private JPanel mainPanelHeader;
+    private JPanel protocolsPanel;
+    private JRadioButton sshRadioButton;
+    private JRadioButton telnetRadioButton;
     private JRadioButton execModeRadioButton;
     private JRadioButton shellModeRadioButton;
     private JPanel centerPanel;
@@ -74,6 +83,7 @@ public class SshCommanderMainFrame extends JFrame {
     private JScrollPane ipAdressScrollPane;
     private JScrollPane commandTextScrollPane;
     private JScrollPane responseTextScrollPane;
+    private TitledBorder protocolsTitledBorder;
     private TitledBorder optionsTitledBorder;
     private TitledBorder commandTitledBorder;
     private TitledBorder responseTitledBorder ;
@@ -117,14 +127,12 @@ public class SshCommanderMainFrame extends JFrame {
         this.setUndecorated(false);
 
 
-        // on crée les afficheurs de texte
+        // On crée les afficheurs de texte
         commandTextArea = new JTextArea();
         commandTextArea.setVisible(true);
-        commandTextArea.setText("PATH=/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/administrator/bin \n\n"
-                                + "hostname && hostname -I \n");
         responseTextArea = new JTextArea();
         ipAdressTextField = new JTextField();
-        ipAdressTextField.setText("root:rcom-uevm@192.168.194.40,root:rcom-uevm@192.168.194.41,root:rcom-uevm@192.168.194.42");
+        ipAdressTextField.setText("root:rcom-uevm@192.168.194.40,root:rcom-uevm@192.168.194.41,root:rcom-uevm@192.168.194.42");// TODO telnet variante
         ipAdressTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         
         ipAdressTitledBorder = new TitledBorder("URLS (separated via char ',')");
@@ -132,7 +140,34 @@ public class SshCommanderMainFrame extends JFrame {
         ipAdressScrollPane.setBorder(ipAdressTitledBorder);
         ipAdressScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         
-
+        
+        sshRadioButton = new JRadioButton("SSH");
+        sshRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                isSshProtocol = true;
+                isTelnetProtocol = false;
+                execModeRadioButton.setEnabled(true);
+                commandTextArea.setText(SSH_DEFAULT_COMMAND_TEXT);
+            }
+        });
+        telnetRadioButton = new JRadioButton("Telnet");
+        telnetRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                isSshProtocol = false;
+                isTelnetProtocol = true;
+                execModeRadioButton.setEnabled(false);
+                shellModeRadioButton.setSelected(true);
+                commandTextArea.setText(TELNET_DEFAULT_COMMAND_TEXT);
+            }
+        });
+        
+        ButtonGroup protocolGroup = new ButtonGroup();
+        protocolGroup.add(sshRadioButton);
+        protocolGroup.add(telnetRadioButton);
+        // Default selection
+        commandTextArea.setText(SSH_DEFAULT_COMMAND_TEXT);
+        sshRadioButton.setSelected(true);
+        
         execModeRadioButton = new JRadioButton("Exec mode");
         execModeRadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -148,11 +183,10 @@ public class SshCommanderMainFrame extends JFrame {
             }
         });
         
-        ButtonGroup group = new ButtonGroup();
-        group.add(execModeRadioButton);
-        group.add(shellModeRadioButton);
+        ButtonGroup modeGroup = new ButtonGroup();
+        modeGroup.add(execModeRadioButton);
+        modeGroup.add(shellModeRadioButton);
         execModeRadioButton.setSelected(true);
-        
         
         exportAsFilesCheckBox = new JCheckBox("Export as files");
         
@@ -174,7 +208,23 @@ public class SshCommanderMainFrame extends JFrame {
         // On crée les jpanel pour l'affichage
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
-
+        
+        // MainPanel header (ips + protocols)
+        mainPanelHeader = new JPanel();
+        mainPanelHeader.setLayout(new BorderLayout());
+        
+        protocolsPanel = new JPanel();
+        protocolsPanel.setLayout(new GridLayout(1, 2));
+        protocolsPanel.add(sshRadioButton);
+        protocolsPanel.add(telnetRadioButton);
+        protocolsTitledBorder = new TitledBorder("Protocol");
+        protocolsPanel.setBorder(protocolsTitledBorder);
+        
+        mainPanelHeader.add(ipAdressScrollPane, BorderLayout.NORTH);
+        mainPanelHeader.add(protocolsPanel, BorderLayout.SOUTH);
+        
+        
+        
         centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
         
@@ -211,7 +261,7 @@ public class SshCommanderMainFrame extends JFrame {
         centerPanel.add(textAreasPanel, BorderLayout.CENTER);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(submitCommandButton, BorderLayout.SOUTH);
-        mainPanel.add(ipAdressScrollPane, BorderLayout.NORTH);
+        mainPanel.add(mainPanelHeader, BorderLayout.NORTH);
         this.setContentPane(mainPanel);
 
         // on ajoute un listener de molette de souris pour resizer la font
@@ -234,6 +284,9 @@ public class SshCommanderMainFrame extends JFrame {
                     commandTitledBorder.setTitleFont(newFont);
                     responseTitledBorder.setTitleFont(newFont);
                     ipAdressTitledBorder.setTitleFont(newFont);
+                    protocolsTitledBorder.setTitleFont(newFont);
+                    sshRadioButton.setFont(newFont);
+                    telnetRadioButton.setFont(newFont);
                     execModeRadioButton.setFont(newFont);
                     shellModeRadioButton.setFont(newFont);
                     exportAsFilesCheckBox.setFont(newFont);
@@ -268,6 +321,8 @@ public class SshCommanderMainFrame extends JFrame {
         setDarkColors();
         
         /////// Set Bold Font ///////
+        sshRadioButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
+        telnetRadioButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         execModeRadioButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         shellModeRadioButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         exportAsFilesCheckBox.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
@@ -278,6 +333,8 @@ public class SshCommanderMainFrame extends JFrame {
         exitCommandButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         
         /////// Set cursors ///////
+        sshRadioButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        telnetRadioButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         execModeRadioButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         shellModeRadioButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         exportAsFilesCheckBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -318,6 +375,8 @@ public class SshCommanderMainFrame extends JFrame {
                            Color caretColor) {
         
         mainPanel.setBackground(editableColor);
+        mainPanelHeader.setBackground(editableColor);
+        protocolsPanel.setBackground(editableColor);
         centerPanel.setBackground(editableColor);
         optionsPanel.setBackground(editableColor);
         textAreasPanel.setBackground(editableColor);
@@ -330,6 +389,8 @@ public class SshCommanderMainFrame extends JFrame {
         commandSelectionPanel.setBackground(editableColor);
         exportAsFilesSelectionPanel.setBackground(editableColor);
         exportAsFilesCheckBox.setBackground(editableColor);
+        sshRadioButton.setBackground(editableColor);
+        telnetRadioButton.setBackground(editableColor);
         execModeRadioButton.setBackground(editableColor);
         shellModeRadioButton.setBackground(editableColor);
         commandTextArea.setBackground(editableColor);
@@ -339,6 +400,8 @@ public class SshCommanderMainFrame extends JFrame {
         exitCommandButton.setBackground(editableColor);
         
         exportAsFilesCheckBox.setForeground(editableFontColor);
+        sshRadioButton.setForeground(editableFontColor);
+        telnetRadioButton.setForeground(editableFontColor);
         execModeRadioButton.setForeground(editableFontColor);
         shellModeRadioButton.setForeground(editableFontColor);
         commandTextArea.setForeground(editableFontColor);
@@ -349,6 +412,7 @@ public class SshCommanderMainFrame extends JFrame {
         
         // Borders
         ipAdressTitledBorder.setTitleColor(nonEditableFontColor);
+        protocolsTitledBorder.setTitleColor(nonEditableFontColor);
         commandTitledBorder.setTitleColor(nonEditableFontColor);
         responseTitledBorder.setTitleColor(nonEditableFontColor);
         optionsTitledBorder.setTitleColor(nonEditableFontColor);
@@ -401,20 +465,20 @@ public class SshCommanderMainFrame extends JFrame {
             @Override
             public void run() {
                 StringBuilder fullResponse = new StringBuilder(responseTextArea.getText());
-
+                
                 String command = commandTextArea.getText();
                 String[] urls = ipAdressTextField.getText().split(",");
-
+                
                 SimpleDateFormat responseDateFormat = new SimpleDateFormat(RESPONSE_DATE_FORMAT_STR);
-
+                
                 String destFolderName = "";
-
+                
                 SimpleDateFormat dateFormatForFiles = new SimpleDateFormat(FILE_CREATION_DATE_FORMAT_STR);
                 if(exportAsFilesCheckBox.isSelected()) {
                     destFolderName = dateFormatForFiles.format(new Date());
                     new File(destFolderName).mkdir();
                 }
-
+                
                 try {
                     for(String url : urls) {
                         String urlTrimed = url.trim();
@@ -428,20 +492,29 @@ public class SshCommanderMainFrame extends JFrame {
                         responseTextArea.setText(fullResponse.toString());
 
                         try {
-                            SSHConnection connection = new SSHConnection();
-                            connection.connect(urlTrimed);
-
                             String response = "";
+                            
+                            if(isSshProtocol) {
+                                SSHConnection connection = new SSHConnection();
+                                connection.connect(urlTrimed);
+                                
+                                if (isExecMode) {
+                                    response = connection.sendExecCommand(command);
 
-                            if (isExecMode) {
-                                response = connection.sendExecCommand(command);
-
-                            } else if(isShellMode) {
+                                } else if(isShellMode) {
+                                    String[] commands = command.split("\n");
+                                    response = connection.sendShellCommand(commands);
+                                }
+                                connection.disconnect();
+                                
+                                
+                            } else if(isTelnetProtocol) {
+                                TelnetConnection connection = new TelnetConnection();
                                 String[] commands = command.split("\n");
-                                response = connection.sendShellCommand(commands);
+                                response = connection.sendCommands(urlTrimed,
+                                                                   commands);
                             }
-                            connection.disconnect();
-
+                            
                             formatedSourceDate = responseDateFormat.format(new Date());
                             fullResponse.append(formatedSourceDate)
                                     .append(" - Done! Response:\n")
@@ -451,15 +524,18 @@ public class SshCommanderMainFrame extends JFrame {
                             if(exportAsFilesCheckBox.isSelected()) {
                                 writeInAFile(destFolderName  +File.separator + host + FILE_EXTENSION, response);
                             }
-
+                            
                         } catch(JSchException e) {
-                            String errorStr = stackTraceToString(e);
-                            fullResponse.append("\n-------------------------\n")
-                                        .append(errorStr)
-                                        .append("\n-------------------------\n\n\n");
-                            if(exportAsFilesCheckBox.isSelected()) {
-                                writeInAFile(destFolderName  +File.separator + host + FILE_EXTENSION, errorStr);
-                            }
+                            handleExceptionDunringCommand(fullResponse,
+                                                          host,
+                                                          destFolderName,
+                                                          e);
+                                    
+                        } catch(IOException e) {
+                            handleExceptionDunringCommand(fullResponse,
+                                                          host,
+                                                          destFolderName,
+                                                          e);
                         }
                         
                         if(isInterrupt) {
@@ -486,6 +562,21 @@ public class SshCommanderMainFrame extends JFrame {
         });
         notifyThreadStarts();
         t.start();
+    }
+    
+    
+    
+    private void handleExceptionDunringCommand(StringBuilder fullResponse,
+                                               String host,
+                                               String destFolderName,
+                                               Exception e) {
+        String errorStr = stackTraceToString(e);
+        fullResponse.append("\n-------------------------\n")
+                    .append(errorStr)
+                    .append("\n-------------------------\n\n\n");
+        if(exportAsFilesCheckBox.isSelected()) {
+            writeInAFile(destFolderName  +File.separator + host + FILE_EXTENSION, errorStr);
+        }
     }
 
 

@@ -21,13 +21,16 @@ public class SSHConnection {
     private static final int CHANNEL_CONNECT_TIMEOUT_MS  = 10000;
     private static final String SSH_COMMAND_ERROR_TEXT = "Error while waiting for ssh response =";
     
+    
     private Session session;
 	
 	
- 
-	public void connect(String username, String host, String password) throws Exception {
+    
+	public void connect(String username, String host, String password) throws JSchException {
 		JSch jsch = new JSch();
 	
+		System.out.println("getSession("+username+", "+host+", "+DEFAULT_SSH_PORT+")");
+        
 	    session = jsch.getSession(
 	    		     username,
 	    		     host,
@@ -44,25 +47,13 @@ public class SSHConnection {
 	
 	
 	public void connect(String url) throws JSchException  {
-		JSch jsch = new JSch();
-		
 		String username = url.substring(0, url.lastIndexOf(':'));
 		String password = url.substring(url.lastIndexOf(':')+1, url.lastIndexOf('@'));
 		String host = url.substring(url.lastIndexOf('@')+1);
 	
-		System.out.println("getSession("+username+", "+host+", "+DEFAULT_SSH_PORT+")");
-		
-	    session = jsch.getSession(
-	    		     username,
-	    		     host,
-	    		     DEFAULT_SSH_PORT
-	    		   );
-	    session.setPassword(password);
-        
-	    Properties properties = new Properties();
-	    properties.put("StrictHostKeyChecking", "no");
-	    session.setConfig(properties);
-	    session.connect(TIMEOUT_CONNECTION_MS);
+		connect(username,
+                host,
+                password);
 	}
 	
 
