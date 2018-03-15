@@ -65,6 +65,12 @@ v3.5 => - Ajout du protocol Telnet, et du choix de protocol
 v3.6 => - Ajout changement de couleur par CTRL + B sur les zones d'édition de texte
         - Correction des couleur en mode white pour les zones éditables
         - Adress => Address
+        - Correction lecture des retours de commande (on lit jusqu'à la fin de in.available, non pas uniquement quand la connexion est coupée)
+
+
+
+
+
 
 
 
