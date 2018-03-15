@@ -66,7 +66,7 @@ public class SshCommanderMainFrame extends JFrame {
     
     private JTextArea commandTextArea;
     private JTextArea responseTextArea;
-    private JTextField ipAdressTextField;
+    private JTextField ipAddressTextField;
     private JButton submitCommandButton;
     private JButton exitCommandButton;
     private JCheckBox exportAsFilesCheckBox;
@@ -84,14 +84,14 @@ public class SshCommanderMainFrame extends JFrame {
     private JPanel commandSelectionPanel;
     private JPanel exportAsFilesSelectionPanel;
     private JPanel textAreasPanel;
-    private JScrollPane ipAdressScrollPane;
+    private JScrollPane ipAddressScrollPane;
     private JScrollPane commandTextScrollPane;
     private JScrollPane responseTextScrollPane;
     private TitledBorder protocolsTitledBorder;
     private TitledBorder optionsTitledBorder;
     private TitledBorder commandTitledBorder;
     private TitledBorder responseTitledBorder ;
-    private TitledBorder ipAdressTitledBorder;
+    private TitledBorder ipAddressTitledBorder;
     
     // Backup colors
     Color editableColor;
@@ -144,14 +144,14 @@ public class SshCommanderMainFrame extends JFrame {
         commandTextArea = new JTextArea();
         commandTextArea.setVisible(true);
         responseTextArea = new JTextArea();
-        ipAdressTextField = new JTextField();
-        ipAdressTextField.setText("root:rcom-uevm@192.168.194.40,root:rcom-uevm@192.168.194.41,root:rcom-uevm@192.168.194.42");// TODO telnet variante
-        ipAdressTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        ipAddressTextField = new JTextField();
+        ipAddressTextField.setText("root:rcom-uevm@192.168.194.40,root:rcom-uevm@192.168.194.41,root:rcom-uevm@192.168.194.42");// TODO telnet variante
+        ipAddressTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         
-        ipAdressTitledBorder = new TitledBorder("URLS (separated via char ',')");
-        ipAdressScrollPane = new JScrollPane(ipAdressTextField);
-        ipAdressScrollPane.setBorder(ipAdressTitledBorder);
-        ipAdressScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        ipAddressTitledBorder = new TitledBorder("URLS (separated via char ',')");
+        ipAddressScrollPane = new JScrollPane(ipAddressTextField);
+        ipAddressScrollPane.setBorder(ipAddressTitledBorder);
+        ipAddressScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         
         
         sshRadioButton = new JRadioButton("SSH");
@@ -233,7 +233,7 @@ public class SshCommanderMainFrame extends JFrame {
         protocolsTitledBorder = new TitledBorder("Protocol");
         protocolsPanel.setBorder(protocolsTitledBorder);
         
-        mainPanelHeader.add(ipAdressScrollPane, BorderLayout.NORTH);
+        mainPanelHeader.add(ipAddressScrollPane, BorderLayout.NORTH);
         mainPanelHeader.add(protocolsPanel, BorderLayout.SOUTH);
         
         
@@ -295,7 +295,7 @@ public class SshCommanderMainFrame extends JFrame {
                     optionsTitledBorder.setTitleFont(newFont);
                     commandTitledBorder.setTitleFont(newFont);
                     responseTitledBorder.setTitleFont(newFont);
-                    ipAdressTitledBorder.setTitleFont(newFont);
+                    ipAddressTitledBorder.setTitleFont(newFont);
                     protocolsTitledBorder.setTitleFont(newFont);
                     sshRadioButton.setFont(newFont);
                     telnetRadioButton.setFont(newFont);
@@ -304,11 +304,11 @@ public class SshCommanderMainFrame extends JFrame {
                     exportAsFilesCheckBox.setFont(newFont);
                     commandTextArea.setFont(newFont);
                     responseTextArea.setFont(newFont);
-                    ipAdressTextField.setFont(newFont);
+                    ipAddressTextField.setFont(newFont);
                     submitCommandButton.setFont(newFont);
                     exitCommandButton.setFont(newFont);
                     
-                    updateIpAdressHeight();
+                    updateIpAddressHeight();
                     
                     mainPanel.repaint();
                     SshCommanderMainFrame.this.invalidate();
@@ -336,7 +336,7 @@ public class SshCommanderMainFrame extends JFrame {
             }
         };
         KeyStroke ctrlB = KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.CTRL_DOWN_MASK);
-        ipAdressTextField.getInputMap().put(ctrlB, doChangeColors);
+        ipAddressTextField.getInputMap().put(ctrlB, doChangeColors);
         commandTextArea.getInputMap().put(ctrlB, doChangeColors);
         responseTextArea.getInputMap().put(ctrlB, doChangeColors);
         
@@ -347,7 +347,7 @@ public class SshCommanderMainFrame extends JFrame {
         setDarkColors();
         
         /////// Set Bold Font ///////
-        ipAdressTextField.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
+        ipAddressTextField.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         commandTextArea.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         responseTextArea.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
         sshRadioButton.setFont(exportAsFilesCheckBox.getFont().deriveFont(Font.BOLD));
@@ -367,8 +367,8 @@ public class SshCommanderMainFrame extends JFrame {
         submitCommandButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         exitCommandButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        /////// Redimension ipAdressTextField for scrollbar (overlap text oterwise) ///////
-        updateIpAdressHeight();
+        /////// Redimension ipAddressTextField for scrollbar (overlap text oterwise) ///////
+        updateIpAddressHeight();
 
         // Et enfin, la rendre visible
         this.setVisible(true);
@@ -406,7 +406,7 @@ public class SshCommanderMainFrame extends JFrame {
         protocolsPanel.setBackground(nonEditableColor);
         centerPanel.setBackground(nonEditableColor);
         textAreasPanel.setBackground(nonEditableColor);
-        ipAdressScrollPane.setBackground(nonEditableColor);
+        ipAddressScrollPane.setBackground(nonEditableColor);
         commandTextScrollPane.setBackground(nonEditableColor);
         responseTextScrollPane.setBackground(nonEditableColor);
         optionsPanel.setBackground(nonEditableColor);
@@ -422,7 +422,7 @@ public class SshCommanderMainFrame extends JFrame {
         
         commandTextArea.setBackground(editableColor);
         responseTextArea.setBackground(editableColor);
-        ipAdressTextField.setBackground(editableColor);
+        ipAddressTextField.setBackground(editableColor);
         
         exportAsFilesCheckBox.setForeground(editableFontColor);
         sshRadioButton.setForeground(editableFontColor);
@@ -431,39 +431,39 @@ public class SshCommanderMainFrame extends JFrame {
         shellModeRadioButton.setForeground(editableFontColor);
         commandTextArea.setForeground(editableFontColor);
         responseTextArea.setForeground(editableFontColor);
-        ipAdressTextField.setForeground(editableFontColor);
+        ipAddressTextField.setForeground(editableFontColor);
         submitCommandButton.setForeground(editableFontColor);
         exitCommandButton.setForeground(editableFontColor);
         
         // Borders
-        ipAdressTitledBorder.setTitleColor(nonEditableFontColor);
+        ipAddressTitledBorder.setTitleColor(nonEditableFontColor);
         protocolsTitledBorder.setTitleColor(nonEditableFontColor);
         commandTitledBorder.setTitleColor(nonEditableFontColor);
         responseTitledBorder.setTitleColor(nonEditableFontColor);
         optionsTitledBorder.setTitleColor(nonEditableFontColor);
         
         // Scrollbars
-        ipAdressScrollPane.getVerticalScrollBar().setBackground(editableColor);
-        ipAdressScrollPane.getHorizontalScrollBar().setBackground(editableColor);
+        ipAddressScrollPane.getVerticalScrollBar().setBackground(editableColor);
+        ipAddressScrollPane.getHorizontalScrollBar().setBackground(editableColor);
         commandTextScrollPane.getVerticalScrollBar().setBackground(editableColor);
         commandTextScrollPane.getHorizontalScrollBar().setBackground(editableColor);
         responseTextScrollPane.getVerticalScrollBar().setBackground(editableColor);
         responseTextScrollPane.getHorizontalScrollBar().setBackground(editableColor);
         
         // CaretColors
-        ipAdressTextField.setCaretColor(caretColor);
+        ipAddressTextField.setCaretColor(caretColor);
         responseTextArea.setCaretColor(caretColor);
         commandTextArea.setCaretColor(caretColor);
     }
     
     
     
-    private void updateIpAdressHeight() {
+    private void updateIpAddressHeight() {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Dimension dim = optionsPanel.getPreferredSize();
                 dim.setSize(dim.width, dim.height);
-                ipAdressScrollPane.setPreferredSize(dim);
+                ipAddressScrollPane.setPreferredSize(dim);
             }
         });
     }
@@ -471,11 +471,11 @@ public class SshCommanderMainFrame extends JFrame {
     
     
     private void backupOriginalColors() {
-        editableColor = ipAdressTextField.getBackground();
+        editableColor = ipAddressTextField.getBackground();
         editableFontColor = exportAsFilesCheckBox.getForeground();
         nonEditableColor = mainPanel.getBackground();
-        nonEditableFontColor = ipAdressTitledBorder.getTitleColor();
-        caretColor = ipAdressTextField.getCaretColor();
+        nonEditableFontColor = ipAddressTitledBorder.getTitleColor();
+        caretColor = ipAddressTextField.getCaretColor();
     }
     
     
@@ -514,7 +514,7 @@ public class SshCommanderMainFrame extends JFrame {
                 StringBuilder fullResponse = new StringBuilder(responseTextArea.getText());
                 
                 String command = commandTextArea.getText();
-                String[] urls = ipAdressTextField.getText().split(",");
+                String[] urls = ipAddressTextField.getText().split(",");
                 
                 SimpleDateFormat responseDateFormat = new SimpleDateFormat(RESPONSE_DATE_FORMAT_STR);
                 
