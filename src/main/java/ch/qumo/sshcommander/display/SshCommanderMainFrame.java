@@ -28,7 +28,6 @@ import ch.qumo.sshcommander.ssh.SSHConnection;
 import ch.qumo.sshcommander.telnet.TelnetConnection;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Event;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -39,7 +38,6 @@ import java.util.Date;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
-import javax.swing.InputMap;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 import javax.swing.KeyStroke;
@@ -98,6 +96,7 @@ public class SshCommanderMainFrame extends JFrame {
     // Backup colors
     Color editableColor;
     Color editableFontColor;
+    Color nonEditableColor;
     Color nonEditableFontColor;
     Color caretColor;
     
@@ -329,7 +328,7 @@ public class SshCommanderMainFrame extends JFrame {
         /////// Add CTRL + B listener to change colors ///////
         Action doChangeColors = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                if(mainPanel.getBackground().equals(editableColor)) {
+                if(mainPanel.getBackground().equals(nonEditableColor)) {
                     setDarkColors();
                 } else {
                     setOriginalsColors();
@@ -398,33 +397,32 @@ public class SshCommanderMainFrame extends JFrame {
     
     private void setColors(Color editableColor,
                            Color editableFontColor,
+                           Color nonEditableColor,
                            Color nonEditableFontColor,
                            Color caretColor) {
         
-        mainPanel.setBackground(editableColor);
-        mainPanelHeader.setBackground(editableColor);
-        protocolsPanel.setBackground(editableColor);
-        centerPanel.setBackground(editableColor);
-        optionsPanel.setBackground(editableColor);
-        textAreasPanel.setBackground(editableColor);
+        mainPanel.setBackground(nonEditableColor);
+        mainPanelHeader.setBackground(nonEditableColor);
+        protocolsPanel.setBackground(nonEditableColor);
+        centerPanel.setBackground(nonEditableColor);
+        textAreasPanel.setBackground(nonEditableColor);
+        ipAdressScrollPane.setBackground(nonEditableColor);
+        commandTextScrollPane.setBackground(nonEditableColor);
+        responseTextScrollPane.setBackground(nonEditableColor);
+        optionsPanel.setBackground(nonEditableColor);
+        commandSelectionPanel.setBackground(nonEditableColor);
+        exportAsFilesSelectionPanel.setBackground(nonEditableColor);
+        exportAsFilesCheckBox.setBackground(nonEditableColor);
+        sshRadioButton.setBackground(nonEditableColor);
+        telnetRadioButton.setBackground(nonEditableColor);
+        execModeRadioButton.setBackground(nonEditableColor);
+        shellModeRadioButton.setBackground(nonEditableColor);
+        submitCommandButton.setBackground(nonEditableColor);
+        exitCommandButton.setBackground(nonEditableColor);
         
-        textAreasPanel.setBackground(editableColor);
-        ipAdressScrollPane.setBackground(editableColor);
-        commandTextScrollPane.setBackground(editableColor);
-        responseTextScrollPane.setBackground(editableColor);
-        optionsPanel.setBackground(editableColor);
-        commandSelectionPanel.setBackground(editableColor);
-        exportAsFilesSelectionPanel.setBackground(editableColor);
-        exportAsFilesCheckBox.setBackground(editableColor);
-        sshRadioButton.setBackground(editableColor);
-        telnetRadioButton.setBackground(editableColor);
-        execModeRadioButton.setBackground(editableColor);
-        shellModeRadioButton.setBackground(editableColor);
         commandTextArea.setBackground(editableColor);
         responseTextArea.setBackground(editableColor);
         ipAdressTextField.setBackground(editableColor);
-        submitCommandButton.setBackground(editableColor);
-        exitCommandButton.setBackground(editableColor);
         
         exportAsFilesCheckBox.setForeground(editableFontColor);
         sshRadioButton.setForeground(editableFontColor);
@@ -473,8 +471,9 @@ public class SshCommanderMainFrame extends JFrame {
     
     
     private void backupOriginalColors() {
-        editableColor = mainPanel.getBackground();
+        editableColor = ipAdressTextField.getBackground();
         editableFontColor = exportAsFilesCheckBox.getForeground();
+        nonEditableColor = mainPanel.getBackground();
         nonEditableFontColor = ipAdressTitledBorder.getTitleColor();
         caretColor = ipAdressTextField.getCaretColor();
     }
@@ -484,6 +483,7 @@ public class SshCommanderMainFrame extends JFrame {
     private void setOriginalsColors() {
         setColors(editableColor,
                   editableFontColor,
+                  nonEditableColor,
                   nonEditableFontColor,
                   caretColor);
     }
@@ -493,11 +493,13 @@ public class SshCommanderMainFrame extends JFrame {
     private void setDarkColors() {
         Color editableColor = new Color(43, 43, 43);
         Color editableFontColor = new Color(189, 203, 218);
+        Color nonEditableColor = new Color(43, 43, 43);
         Color nonEditableFontColor = new Color(104, 151, 187);
         Color caretColor = new Color(255, 255, 255);
         
         setColors(editableColor,
                   editableFontColor,
+                  nonEditableColor,
                   nonEditableFontColor,
                   caretColor);
     }
