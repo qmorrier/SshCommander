@@ -5,6 +5,7 @@ package ch.qumo.sshcommander.telnet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.SocketException;
 import org.apache.commons.net.telnet.TelnetClient;
 import org.apache.commons.net.telnet.TelnetInputListener;
 
@@ -76,24 +77,27 @@ public class TelnetConnection implements TelnetInputListener {
                 
                 // Convert the read buffer to string.
                 String buffStringTmp = new String(tmp, 0, i);
-                //System.out.print( buffStringTmp );
                 buffString.append(buffStringTmp);
                 
-                
-                if(!telnet.isConnected()) {
-                    System.out.println("!telnet.isConnected()");
-                    break;
-                }
-                if(!telnet.sendAYT( WAITING_TIME_MS )) {
-                    System.out.println("!telnet.sendAYT( WAITING_TIME_MS )");
-                    break;
-                }
-                
                 Thread.sleep( WAITING_TIME_MS );
+                
+                if(!(in.available() > 0)) {
+                    if(!telnet.isConnected()) {
+                        System.out.println("!telnet.isConnected()");
+                        break;
+                    }
+                    if(!telnet.sendAYT( WAITING_TIME_MS )) {
+                        System.out.println("!telnet.sendAYT( WAITING_TIME_MS )");
+                        break;
+                    }
+                }
                 
             }// while(true)
 
         } catch(InterruptedException e) {
+            e.printStackTrace();
+            
+        } catch(SocketException e) {
             e.printStackTrace();
         }
         
