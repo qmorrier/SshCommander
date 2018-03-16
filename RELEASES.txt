@@ -68,7 +68,9 @@ v3.6 => - Ajout changement de couleur par CTRL + B sur les zones d'édition de te
         - Correction lecture des retours de commande (on lit jusqu'à la fin de in.available, non pas uniquement quand la connexion est coupée)
 
 
-
+2018.03.16
+v3.7 => - Fermeture des Streams et de la connexion TelnetClient après chaque utilisation
+        - Interrupt Thread en cas d'interrupted exception (Sonar tip)
 
 
 

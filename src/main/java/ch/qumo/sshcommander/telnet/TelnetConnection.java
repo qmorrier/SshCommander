@@ -18,20 +18,21 @@ public class TelnetConnection implements TelnetInputListener {
     private static final int SIZE_BYTE_CHAR_BUFF = 32*4096;
     private static final int WAITING_TIME_MS     = 500;
  
-    private TelnetClient telnet = null; 
-    private InputStream in = null; 
-    private PrintStream out = null; 
 	
 	
     
 	public String sendCommands(String url,
                                String[] commands) throws IOException {
-        String res = "";
         
 		String username = url.substring(0, url.lastIndexOf(':'));
 		String password = url.substring(url.lastIndexOf(':')+1, url.lastIndexOf('@'));
 		String host = url.substring(url.lastIndexOf('@')+1);
         
+        String res = "";
+        
+        TelnetClient telnet = null; 
+        InputStream in = null; 
+        PrintStream out = null; 
         
         telnet = new TelnetClient();
         
@@ -45,13 +46,13 @@ public class TelnetConnection implements TelnetInputListener {
         out = new PrintStream(telnet.getOutputStream());
         
         // Login
-        write(username);
-        write(password);
+        write(out, username);
+        write(out, password);
         
         
         // And then commands
         for(String command : commands) {
-            write(command);
+            write(out, command);
         }
         
         // read buffer
@@ -96,9 +97,15 @@ public class TelnetConnection implements TelnetInputListener {
 
         } catch(InterruptedException e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
             
         } catch(SocketException e) {
             e.printStackTrace();
+            
+        } finally {
+            in.close();
+            out.close();
+            telnet.disconnect();
         }
         
         res = buffString.toString();
@@ -109,10 +116,9 @@ public class TelnetConnection implements TelnetInputListener {
 	
 	
     
-    private void write(String value) { 
-        out.println(value); 
-        out.flush(); 
-        //System.out.println(value); 
+    private void write(PrintStream printStream, String value) { 
+        printStream.println(value);
+        printStream.flush(); 
     } 
 
 

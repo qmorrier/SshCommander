@@ -145,7 +145,7 @@ public class SshCommanderMainFrame extends JFrame {
         commandTextArea.setVisible(true);
         responseTextArea = new JTextArea();
         ipAddressTextField = new JTextField();
-        ipAddressTextField.setText("root:rcom-uevm@192.168.194.40,root:rcom-uevm@192.168.194.41,root:rcom-uevm@192.168.194.42");// TODO telnet variante
+        ipAddressTextField.setText("root:rcom-uevm@192.168.194.40,root:rcom-uevm@192.168.194.41,root:rcom-uevm@192.168.194.42");
         ipAddressTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         
         ipAddressTitledBorder = new TitledBorder("URLS (separated via char ',')");
@@ -227,7 +227,7 @@ public class SshCommanderMainFrame extends JFrame {
         mainPanelHeader.setLayout(new BorderLayout());
         
         protocolsPanel = new JPanel();
-        protocolsPanel.setLayout(new GridLayout(1, 2));
+        protocolsPanel.setLayout(new GridLayout(2, 1));
         protocolsPanel.add(sshRadioButton);
         protocolsPanel.add(telnetRadioButton);
         protocolsTitledBorder = new TitledBorder("Protocol");
@@ -491,17 +491,17 @@ public class SshCommanderMainFrame extends JFrame {
     
     
     private void setDarkColors() {
-        Color editableColor = new Color(43, 43, 43);
-        Color editableFontColor = new Color(189, 203, 218);
-        Color nonEditableColor = new Color(43, 43, 43);
-        Color nonEditableFontColor = new Color(104, 151, 187);
-        Color caretColor = new Color(255, 255, 255);
+        Color editableDarkColor = new Color(43, 43, 43);
+        Color editableFontDarkColor = new Color(189, 203, 218);
+        Color nonEditableDarkColor = new Color(43, 43, 43);
+        Color nonEditableFontDarkColor = new Color(104, 151, 187);
+        Color caretDarkColor = new Color(255, 255, 255);
         
-        setColors(editableColor,
-                  editableFontColor,
-                  nonEditableColor,
-                  nonEditableFontColor,
-                  caretColor);
+        setColors(editableDarkColor,
+                  editableFontDarkColor,
+                  nonEditableDarkColor,
+                  nonEditableFontDarkColor,
+                  caretDarkColor);
     }
     
     
