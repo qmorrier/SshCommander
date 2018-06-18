@@ -73,6 +73,9 @@ v3.7 => - Fermeture des Streams et de la connexion TelnetClient après chaque uti
         - Interrupt Thread en cas d'interrupted exception (Sonar tip)
 
 
+2018.06.18
+v3.8 => - Ajout de commandes spéciales en mode shell (indicateur de commandes ==>)
+        - Commande spéciale ==>WAIT(2000) en millisec
 
 
 
