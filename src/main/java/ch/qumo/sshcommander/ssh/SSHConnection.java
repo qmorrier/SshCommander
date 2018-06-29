@@ -2,15 +2,13 @@ package ch.qumo.sshcommander.ssh;
 
 
 
+import ch.qumo.sshcommander.localcommands.LocalCommands;
 import java.util.Properties;
 import com.jcraft.jsch.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
 
 
 
@@ -23,7 +21,6 @@ public class SSHConnection {
     private static final int TIMEOUT_CONNECTION_MS       = 4000;
     private static final int CHANNEL_CONNECT_TIMEOUT_MS  = 10000;
     private static final String SSH_COMMAND_ERROR_TEXT = "Error while waiting for ssh response =";
-    private static final String SPECIAL_COMMAND_TAG = "==>";
     
     
     private Session session;
@@ -166,8 +163,8 @@ public class SSHConnection {
             
             // TODO: Parse all commands first into a command object (to avoid parsing errors during exec and not start commands?)
             for(String command : commands) {
-                if(isSpecialCommand(command)) {
-                    executeSpecialCommand(command);
+                if(LocalCommands.isSpecialCommand(command)) {
+                    LocalCommands.executeSpecialCommand(command);
                 } else {
                     shellStream.println(command);
                     shellStream.flush();
@@ -199,30 +196,6 @@ public class SSHConnection {
     }// sendShellCommand()
     
     
-    
-    private boolean isSpecialCommand(String command) {
-        return command.startsWith(SPECIAL_COMMAND_TAG);
-    }
-    
-    
-    
-    private void executeSpecialCommand(String command) {
-        String commandClean = command.substring(SPECIAL_COMMAND_TAG.length()).trim().toUpperCase();
-        if(commandClean.contains("WAIT")) {
-            int waitingTimeMs = Integer.parseInt(extractParams(command)[0]);
-            try {
-                Thread.sleep( waitingTimeMs );
-            } catch(InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-    
-    
-    private String[] extractParams(String command) {
-        String paramsStr = command.substring(command.lastIndexOf("(")+1, command.lastIndexOf(")"));
-        return paramsStr.split(",");
-    }
     
     
 }

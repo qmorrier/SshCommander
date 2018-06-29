@@ -2,6 +2,7 @@ package ch.qumo.sshcommander.telnet;
 
 
 
+import ch.qumo.sshcommander.localcommands.LocalCommands;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -52,7 +53,11 @@ public class TelnetConnection implements TelnetInputListener {
         
         // And then commands
         for(String command : commands) {
-            write(out, command);
+            if(LocalCommands.isSpecialCommand(command)) {
+                LocalCommands.executeSpecialCommand(command);
+            } else {
+                write(out, command);
+            }
         }
         
         // read buffer

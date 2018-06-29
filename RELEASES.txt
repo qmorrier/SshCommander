@@ -78,6 +78,8 @@ v3.8 => - Ajout de commandes spéciales en mode shell (indicateur de commandes ==
         - Commande spéciale ==>WAIT(2000) en millisec
 
 
+2016.06.29
+v3.9 0 => - Factorisation commandes pour ajout au protocole TELNET
 
 
 
