@@ -52,8 +52,8 @@ And they are separated by a comma (**,**) char.
 
 There are two types of command sending:
 
-* **Exec mode**: sends all the command in one string (carriage return apply the commands line by line)
-* **Shell mode**: sends commands one by one (line by line). The last command must close the connection (like exit for a standart linux Sssh server)
+* **Exec mode** : sends all the command in one string (carriage return apply the commands line by line)
+* **Shell mode** : sends commands one by one (line by line). The last command must close the connection (like exit for a standart linux Sssh server)
 
 
 The option **Export as files**, creates a directory in the same folder where the executable jar is, with as name the cureent date/time.  
