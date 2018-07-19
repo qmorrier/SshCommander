@@ -12,14 +12,13 @@ You'll need at least JAVA 1.6 (or above) and MAVEN 2 (or above)
 
 ### Installing
 
--Download the project folder.
--From the local copy, go in the project folder and execute:
-mvn clean install
-
-It will build the file SshCommander-X.X-jar-with-dependencies.jar
-It is an executable jar, that you can run either with the following command:
-java -jar SshCommander-X.X-jar-with-dependencies.jar
-either by double click on it (on windows for example).
+*Download the project folder.
+*From the local copy, go in the project folder and execute:
+**mvn clean install**
+*It will build the file SshCommander-X.X-jar-with-dependencies.jar
+*It is an executable jar, that you can run either with the following command:
+**java -jar SshCommander-X.X-jar-with-dependencies.jar**
+*either by double click on it (on windows for example).
 
 
 ## Built With
