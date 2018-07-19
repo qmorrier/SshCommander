@@ -37,8 +37,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-Base on [JSCH](http://www.jcraft.com/jsch/)
+Based on [JSCH](http://www.jcraft.com/jsch/)
 
 
-
+## Preview
 ![Preview1](./HMI_SshCommander.png)
