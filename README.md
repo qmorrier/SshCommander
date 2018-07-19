@@ -46,8 +46,9 @@ Based on [JSCH](http://www.jcraft.com/jsch/)
 ## Usage
 
 The hosts are declared as:  
-**user**:**password**@**hostIp**  
-And they are separated by a comma char:**,**
+**user**:**password**@**hostIp**
+
+And they are separated by a comma (**,**) char.
 
 There are two types of command sending:
 
