@@ -1,9 +1,9 @@
 
 # SshCommander
 
-![Preview1](./HMI_SshCommander.png)
-
 This is a basic JAVA/SWING programm used to send mutliple SSH or TELNET commands to multiple hosts.
+
+![Preview1](./HMI_SshCommander.png)
 
 ## Getting Started
 
@@ -45,17 +45,25 @@ Based on [JSCH](http://www.jcraft.com/jsch/)
 
 ## Usage
 
+The hosts are declared as:
+**user**:**password**@**hostIp**
+And they are separated by a comma char:**,**
+
 There are two types of command sending:
 
 * Exec mode: sends all the command in one string (carriage return apply the commands line by line)
 * Shell mode: sends commands one by one (line by line). The last command must close the connection (like exit for a standart linux Sssh server)
 
 
-The option *Export as files*, creates a directory in the same folder where the executable jar is, with as name the cureent date/time.
-
+The option **Export as files**, creates a directory in the same folder where the executable jar is, with as name the cureent date/time.
 Within this folder, it creates one file per host holding the result of the command.
 There is also a root file, wich hold all the logs (just like the *Response* area).
 
+You can increase or degrease the font size via:
+**[CTRL]** + **mouse wheel**
+
+You can switch the dark theme to default SWING theme via:
+**[CTRL]** + **[b]**
 
 
 
