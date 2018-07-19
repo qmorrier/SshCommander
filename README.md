@@ -1,7 +1,7 @@
 
 # SshCommander
 
-![Preview1](./HMI_SshCommander.png  | width=300)
+![Preview1](./HMI_SshCommander.png)
 
 This is a basic JAVA/SWING programm used to send mutliple SSH or TELNET commands to multiple hosts.
 
