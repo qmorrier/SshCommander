@@ -40,5 +40,20 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 Based on [JSCH](http://www.jcraft.com/jsch/)
 
 
-## Preview
+## Usage
 ![Preview1](./HMI_SshCommander.png)
+
+There is two types of command sending:
+
+* Exec mode: sends all the command in one string (carriage return apply the commands line by line)
+* Shell mode: sends commands one by one (line by line). The last command must close the connection (like exit for a standart linux Sssh server)
+
+
+The option *Export as files*, creates a directory in the same folder where the executable jar is, with as name the cureent date/time.
+
+Within this folder, it creates one file per host holding the result of the command.
+There is also a root file, wich hold all the logs (just like the *Response* area).
+
+
+
+
