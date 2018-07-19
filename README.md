@@ -1,4 +1,4 @@
-# Project Title
+# SshCommander
 
 This is a basic JAVA/SWING programm used to send mutliple SSH or TELNET commands to multiple hosts.
 
