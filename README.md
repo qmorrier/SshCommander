@@ -1,3 +1,6 @@
+
+![Preview1](./HMI_SshCommander.png)
+
 # SshCommander
 
 This is a basic JAVA/SWING programm used to send mutliple SSH or TELNET commands to multiple hosts.
@@ -41,9 +44,8 @@ Based on [JSCH](http://www.jcraft.com/jsch/)
 
 
 ## Usage
-![Preview1](./HMI_SshCommander.png)
 
-There is two types of command sending:
+There are two types of command sending:
 
 * Exec mode: sends all the command in one string (carriage return apply the commands line by line)
 * Shell mode: sends commands one by one (line by line). The last command must close the connection (like exit for a standart linux Sssh server)
