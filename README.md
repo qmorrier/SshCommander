@@ -7,7 +7,8 @@ This is a basic JAVA/SWING programm used to send mutliple SSH or TELNET commands
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+YOu just need to download the project and compile with Maven / Java.
+It will give you a self executable jar file.
 
 ### Prerequisites
 
@@ -15,13 +16,13 @@ You'll need at least JAVA 1.6 (or above) and MAVEN 2 (or above)
 
 ### Installing
 
-*Download the project folder.
-*From the local copy, go in the project folder and execute:
+* Download the project folder.
+* From the local copy, go in the project folder and execute:
 **mvn clean install**
-*It will build the file SshCommander-X.X-jar-with-dependencies.jar
-*It is an executable jar, that you can run either with the following command:
+* It will build the file SshCommander-X.X-jar-with-dependencies.jar
+* It is an executable jar, that you can run either with the following command:
 **java -jar SshCommander-X.X-jar-with-dependencies.jar**
-*either by double click on it (on windows for example).
+* either by double click on it (on windows for example).
 
 
 ## Built With
@@ -50,11 +51,21 @@ The hosts are declared as:
 
 And they are separated by a comma (**,**) char.
 
-There are two types of command sending:
+There are two ways for sending commands:
 
-* **Exec mode** : sends all the command in one string (carriage return apply the commands line by line)
+* **Exec mode** : sends all the commands in one string (carriage return contained in the string apply the commands line by line)
 * **Shell mode** : sends commands one by one (line by line). The last command must close the connection (like exit for a standart linux Sssh server)
 
+In **Shell mode**, you can also add a pause between commands.  
+You've tu use the special syntax as follow:
+**==>WAIT( timeInMilliseconds)**  
+So by example:
+```bash
+ls -l
+==>WAIT(2000)
+ls -l
+```
+Will execute **ls**, then wait 2 seconds, then re-execute **ls**
 
 The option **Export as files**, creates a directory in the same folder where the executable jar is, with as name the cureent date/time.  
 Within this folder, it creates one file per host holding the result of the command.  
