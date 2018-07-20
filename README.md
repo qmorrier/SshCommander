@@ -79,8 +79,9 @@ You enter the list of commands on the **Command** area (bottom left).
 The result of the execution is outputted in the **Response** area (bottom right).  
 For some SSH server like any standart Linux server, it is necessary to set the PATH environnement variable to find basic commands.  
 Here is the PATH that I commonly use:
-**PATH=/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/administrator/bin
-**
+```
+PATH=/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/administrator/bin
+```
 
 ### Export result directly into files
 The option **Export as files**, creates a directory in the same folder where the executable jar is, with as name the cureent date/time.  
