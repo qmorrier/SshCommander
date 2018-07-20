@@ -55,7 +55,7 @@ By example:
 ```
 root:password@10.0.0.1,root:password@10.0.0.2,root:password@10.0.0.2  
 ```
-In case of multiple hosts, like in the above example, the commands are send sequentially host by host (no parallel exution).
+In case of multiple hosts, like in the above example, the commands are send sequentially host by host (no parallel execution).
 
 ### Choose command sending mode
 There are two modes for sending commands:
