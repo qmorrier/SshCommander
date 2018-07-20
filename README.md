@@ -72,7 +72,7 @@ ls -l
 ==>WAIT(2000)
 ls -l
 ```
-Will execute **ls**, then wait 2 seconds, then re-execute **ls**
+Will execute **ls**, then wait 2 seconds, then execute the second **ls**
 
 ### Enter commands
 You enter the list of commands on the **Command** area (bottom left).  
