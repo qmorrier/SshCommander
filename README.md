@@ -61,10 +61,10 @@ In case of multiple hosts, like in the above example, the commands are send sequ
 There are two modes for sending commands:
 
 * **Exec mode** : sends all the commands in one string (carriage return contained in the string apply the commands line by line)
-* **Shell mode** : sends commands one by one (line by line). The last command must close the connection (like exit for a standart linux Sssh server)
+* **Shell mode** : sends commands one by one (line by line). The last command must close the connection (like exit for a standart linux Ssh server)
 
 In **Shell mode**, you can also add a pause between commands.  
-You've tu use the special syntax as follow:
+You've to use the special syntax as follow:
 **==>WAIT( timeInMilliseconds)**  
 So by example:
 ```bash
