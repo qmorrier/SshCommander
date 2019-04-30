@@ -75,7 +75,7 @@ ls -l
 Will execute **ls**, then wait 2 seconds, then execute the second **ls**
 
 ### Enter commands
-You enter the list of commands on the **Command** area (bottom left).  
+You enter the list of commands in the **Command** area (bottom left).  
 The result of the execution is outputted in the **Response** area (bottom right).  
 For some SSH server like any standart Linux server, it is necessary to set the PATH environnement variable to find basic commands.  
 Here is the PATH that I commonly use:
@@ -84,7 +84,7 @@ PATH=/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbi
 ```
 
 ### Export result directly into files
-The option **Export as files**, creates a directory in the same folder where the executable jar is, with as name the cureent date/time.  
+The option **Export as files**, creates a directory in the same folder where the executable jar is, with as name the current date/time.  
 Within this folder, it creates one file per host holding the result of the command.  
 There is also a root file, wich hold all the logs (just like the *Response* area).  
 
